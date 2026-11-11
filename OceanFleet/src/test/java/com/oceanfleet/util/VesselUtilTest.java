@@ -5,111 +5,86 @@ import com.oceanfleet.model.Vessel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class VesselUtilTest {
 
     private VesselUtil vesselUtil;
+    private Vessel vessel1;
+    private Vessel vessel2;
+    private Vessel vessel3;
 
     @BeforeEach
     void setUp() {
+
         vesselUtil = new VesselUtil();
-    }
 
-    @Test
-    void testVesselListInitiallyEmpty() {
-
-        assertNotNull(vesselUtil.getVesselList());
-        assertTrue(vesselUtil.getVesselList().isEmpty());
-    }
-
-    @Test
-    void testAddSingleVessel() {
-
-        Vessel vessel = new Vessel(
-                "V001",
-                "Sea King",
-                25.5,
-                "Cargo"
+        vessel1 = new Vessel(
+                "V001", "Sea King", 25.5, "Cargo"
         );
 
-        vesselUtil.addVesselPerformance(vessel);
-
-        assertEquals(1, vesselUtil.getVesselList().size());
-        assertSame(vessel, vesselUtil.getVesselList().get(0));
-    }
-
-    @Test
-    void testAddMultipleVessels() {
-
-        Vessel vessel1 = new Vessel(
-                "V001",
-                "Sea King",
-                25.5,
-                "Cargo"
+        vessel2 = new Vessel(
+                "V002", "Ocean Star", 18.0, "Tanker"
         );
 
-        Vessel vessel2 = new Vessel(
-                "V002",
-                "Ocean Star",
-                18.0,
-                "Tanker"
-        );
-
-        Vessel vessel3 = new Vessel(
-                "V003",
-                "Wave Rider",
-                22.3,
-                "Cruise"
+        vessel3 = new Vessel(
+                "V003", "Wave Rider", 22.3, "Cruise"
         );
 
         vesselUtil.addVesselPerformance(vessel1);
         vesselUtil.addVesselPerformance(vessel2);
         vesselUtil.addVesselPerformance(vessel3);
-
-        assertEquals(3, vesselUtil.getVesselList().size());
     }
 
     @Test
-    void testInsertionOrderIsMaintained() {
+    void testGetVesselByIdWhenVesselExists() {
 
-        Vessel vessel1 = new Vessel(
-                "V001", "Sea King", 25.5, "Cargo"
-        );
+        Vessel result = vesselUtil.getVesselById("V002");
 
-        Vessel vessel2 = new Vessel(
-                "V002", "Ocean Star", 18.0, "Tanker"
-        );
-
-        vesselUtil.addVesselPerformance(vessel1);
-        vesselUtil.addVesselPerformance(vessel2);
-
-        assertEquals(
-                "V001",
-                vesselUtil.getVesselList().get(0).getVesselId()
-        );
-
-        assertEquals(
-                "V002",
-                vesselUtil.getVesselList().get(1).getVesselId()
-        );
+        assertNotNull(result);
+        assertSame(vessel2, result);
+        assertEquals("Ocean Star", result.getVesselName());
     }
 
     @Test
-    void testSetVesselList() {
+    void testGetFirstVesselById() {
 
-        List<Vessel> vessels = new ArrayList<>();
+        Vessel result = vesselUtil.getVesselById("V001");
 
-        vessels.add(new Vessel(
-                "V001", "Sea King", 25.5, "Cargo"
-        ));
+        assertSame(vessel1, result);
+    }
 
-        vesselUtil.setVesselList(vessels);
+    @Test
+    void testGetLastVesselById() {
 
-        assertEquals(1, vesselUtil.getVesselList().size());
-        assertSame(vessels, vesselUtil.getVesselList());
+        Vessel result = vesselUtil.getVesselById("V003");
+
+        assertSame(vessel3, result);
+    }
+
+    @Test
+    void testGetVesselByIdWhenVesselDoesNotExist() {
+
+        Vessel result = vesselUtil.getVesselById("V004");
+
+        assertNull(result);
+    }
+
+    @Test
+    void testVesselIdSearchIsCaseSensitive() {
+
+        Vessel result = vesselUtil.getVesselById("v001");
+
+        assertNull(result);
+    }
+
+    @Test
+    void testSearchInEmptyVesselList() {
+
+        VesselUtil emptyVesselUtil = new VesselUtil();
+
+        Vessel result = emptyVesselUtil.getVesselById("V001");
+
+        assertNull(result);
     }
 }
