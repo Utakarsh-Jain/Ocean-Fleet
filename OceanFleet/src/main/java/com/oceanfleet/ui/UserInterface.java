@@ -9,16 +9,33 @@ import java.util.Scanner;
 
 public class UserInterface {
 
-    // Starts the OceanFleet console application.
+    // Starts the OceanFleet application.
     public static void main(String[] args) {
+        new UserInterface().run();
+    }
+
+    // Coordinates the application workflow.
+    public void run() {
 
         Scanner scanner = new Scanner(System.in);
         VesselUtil vesselUtil = new VesselUtil();
 
+        addVessels(scanner, vesselUtil);
+
+        searchVessel(scanner, vesselUtil);
+
+        displayHighPerformanceVessels(vesselUtil);
+    }
+
+    // Accepts and stores vessel details.
+    private void addVessels(
+            Scanner scanner,
+            VesselUtil vesselUtil) {
+
         System.out.println("Enter the number of vessels to be added");
+
         int numberOfVessels = Integer.parseInt(scanner.nextLine());
 
-        // Accepts and stores vessel details.
         for (int i = 0; i < numberOfVessels; i++) {
 
             System.out.println("Enter vessel details");
@@ -41,36 +58,40 @@ public class UserInterface {
 
             vesselUtil.addVesselPerformance(vessel);
         }
+    }
 
-        // Retrieves a vessel using its ID.
+    // Searches for a vessel using its ID.
+    private void searchVessel(
+            Scanner scanner,
+            VesselUtil vesselUtil) {
+
         System.out.println("Enter the Vessel Id to check speed");
 
         String vesselId = scanner.nextLine();
 
-        Vessel searchedVessel = vesselUtil.getVesselById(vesselId);
+        Vessel vessel = vesselUtil.getVesselById(vesselId);
 
-        if (searchedVessel != null) {
-
-            displayVessel(searchedVessel);
-
+        if (vessel != null) {
+            displayVessel(vessel);
         } else {
-
             System.out.println("Vessel Id " + vesselId + " not found.");
         }
+    }
 
-        // Displays all high-performance vessels.
+    // Displays all high-performance vessels.
+    private void displayHighPerformanceVessels(VesselUtil vesselUtil) {
+
         System.out.println("High performance vessels are");
 
-        List<Vessel> highPerformanceVessels =
-                vesselUtil.getHighPerformanceVessels();
+        List<Vessel> vessels = vesselUtil.getHighPerformanceVessels();
 
-        for (Vessel vessel : highPerformanceVessels) {
+        for (Vessel vessel : vessels) {
             displayVessel(vessel);
         }
     }
 
     // Displays vessel details in the required format.
-    private static void displayVessel(Vessel vessel) {
+    private void displayVessel(Vessel vessel) {
 
         System.out.println(
                 vessel.getVesselId() + " | "
