@@ -1,13 +1,14 @@
 
-package com.oceanfleet.util;
+package com.oceanfleet.model;
 
 import com.oceanfleet.model.Vessel;
+import com.oceanfleet.util.VesselUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VesselUtilTest {
+class VesselTest {
 
     private VesselUtil vesselUtil;
     private Vessel vessel1;
