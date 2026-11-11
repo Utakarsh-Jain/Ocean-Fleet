@@ -1,69 +1,90 @@
 
-package com.oceanfleet.model;
+package com.oceanfleet.util;
 
+import com.oceanfleet.model.Vessel;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VesselTest {
+class VesselUtilTest {
 
-    @Test
-    void testNoArgumentConstructor() {
+    private VesselUtil vesselUtil;
+    private Vessel vessel1;
+    private Vessel vessel2;
+    private Vessel vessel3;
 
-        Vessel vessel = new Vessel();
+    @BeforeEach
+    void setUp() {
 
-        assertNull(vessel.getVesselId());
-        assertNull(vessel.getVesselName());
-        assertEquals(0.0, vessel.getAverageSpeed());
-        assertNull(vessel.getVesselType());
-    }
+        vesselUtil = new VesselUtil();
 
-    @Test
-    void testParameterizedConstructor() {
-
-        Vessel vessel = new Vessel(
-                "V001",
-                "Sea King",
-                25.5,
-                "Cargo"
+        vessel1 = new Vessel(
+                "V001", "Sea King", 25.5, "Cargo"
         );
 
-        assertEquals("V001", vessel.getVesselId());
-        assertEquals("Sea King", vessel.getVesselName());
-        assertEquals(25.5, vessel.getAverageSpeed());
-        assertEquals("Cargo", vessel.getVesselType());
-    }
-
-    @Test
-    void testSettersAndGetters() {
-
-        Vessel vessel = new Vessel();
-
-        vessel.setVesselId("V002");
-        vessel.setVesselName("Ocean Star");
-        vessel.setAverageSpeed(18.0);
-        vessel.setVesselType("Tanker");
-
-        assertEquals("V002", vessel.getVesselId());
-        assertEquals("Ocean Star", vessel.getVesselName());
-        assertEquals(18.0, vessel.getAverageSpeed());
-        assertEquals("Tanker", vessel.getVesselType());
-    }
-
-    @Test
-    void testUpdateExistingVesselDetails() {
-
-        Vessel vessel = new Vessel(
-                "V001",
-                "Sea King",
-                25.5,
-                "Cargo"
+        vessel2 = new Vessel(
+                "V002", "Ocean Star", 18.0, "Tanker"
         );
 
-        vessel.setVesselName("Sea King Updated");
-        vessel.setAverageSpeed(30.0);
+        vessel3 = new Vessel(
+                "V003", "Wave Rider", 22.3, "Cruise"
+        );
 
-        assertEquals("Sea King Updated", vessel.getVesselName());
-        assertEquals(30.0, vessel.getAverageSpeed());
+        vesselUtil.addVesselPerformance(vessel1);
+        vesselUtil.addVesselPerformance(vessel2);
+        vesselUtil.addVesselPerformance(vessel3);
+    }
+
+    @Test
+    void testGetVesselByIdWhenVesselExists() {
+
+        Vessel result = vesselUtil.getVesselById("V002");
+
+        assertNotNull(result);
+        assertSame(vessel2, result);
+        assertEquals("Ocean Star", result.getVesselName());
+    }
+
+    @Test
+    void testGetFirstVesselById() {
+
+        Vessel result = vesselUtil.getVesselById("V001");
+
+        assertSame(vessel1, result);
+    }
+
+    @Test
+    void testGetLastVesselById() {
+
+        Vessel result = vesselUtil.getVesselById("V003");
+
+        assertSame(vessel3, result);
+    }
+
+    @Test
+    void testGetVesselByIdWhenVesselDoesNotExist() {
+
+        Vessel result = vesselUtil.getVesselById("V004");
+
+        assertNull(result);
+    }
+
+    @Test
+    void testVesselIdSearchIsCaseSensitive() {
+
+        Vessel result = vesselUtil.getVesselById("v001");
+
+        assertNull(result);
+    }
+
+    @Test
+    void testSearchInEmptyVesselList() {
+
+        VesselUtil emptyVesselUtil = new VesselUtil();
+
+        Vessel result = emptyVesselUtil.getVesselById("V001");
+
+        assertNull(result);
     }
 }
