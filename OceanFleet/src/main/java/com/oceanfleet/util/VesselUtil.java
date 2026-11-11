@@ -15,14 +15,14 @@ public class VesselUtil {
         this.vesselList = new ArrayList<>();
     }
 
-    // Returns the vessel list.
+    // Returns a copy of the vessel list.
     public List<Vessel> getVesselList() {
-        return vesselList;
+        return new ArrayList<>(vesselList);
     }
 
-    // Updates the vessel list.
+    // Updates the vessel list using a copy.
     public void setVesselList(List<Vessel> vesselList) {
-        this.vesselList = vesselList;
+        this.vesselList = new ArrayList<>(vesselList);
     }
 
     // Adds a vessel to the vessel list.
